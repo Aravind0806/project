@@ -1,0 +1,21 @@
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+
+df = pd.read_table('Desktop/sms_dataset',   sep='\t', header=None, names=['label', 'msg'])
+#df['label'] = df.label.map({'spam': 1, 'ham': 0})
+
+cv= CountVectorizer()  
+
+X = cv.fit_transform(df['msg'])  
+
+X_train, X_test, y_train, y_test = train_test_split(X, df['label'], test_size=0.3, random_state=42) 
+
+clf = MultinomialNB()
+clf.fit(X_train, y_train)  
+pred = clf.predict(X_test)
+print metrics.accuracy_score(y_test, pred)
+#print confusion_matrix(y_test, pred) 
